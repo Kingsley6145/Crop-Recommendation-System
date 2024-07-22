@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .crop {
+            width: 45%;
+            margin: 20px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .crop:hover {
+            transform: scale(1.05);
+        }
+
+        .crop p {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .info-block {
+            display: none;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -20%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            width: 60%;
+        }
+
+        .info-block .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KIAMBU COUNTY</h1>
+        <div class="grid">
+            <div class="crop" onclick="showInfo('info1')">
+                <p>RUIRU</p>
+            </div>
+            <div class="crop" onclick="showInfo('info2')">
+                <p>JUJA</p>
+            </div>
+            <div class="crop" onclick="showInfo('info3')">
+                <p>KIKUYU</p>
+            </div>
+            <div class="crop" onclick="showInfo('info4')">
+                <p>KABETE</p>
+            </div>
+            <div class="crop" onclick="showInfo('info5')">
+                <p>KIAMBAA</p>
+            </div>
+            <div class="crop" onclick="showInfo('info6')">
+                <p>KIAMBU TOWN</p>
+            </div>
+            <div class="crop" onclick="showInfo('info7')">
+                <p>LARI</p>
+            </div>
+            <div class="crop" onclick="showInfo('info8')">
+                <p>LIMURU</p>
+            </div>
+            <div class="crop" onclick="showInfo('info9')">
+                <p>THIKA TOWN</p>
+            </div>
+            <div class="crop" onclick="showInfo('info10')">
+                <p>GATUNDU NORTH</p>
+            </div>
+            <div class="crop" onclick="showInfo('info11')">
+                <p>GATUNDU SOUTH</p>
+            </div>
+        </div>
+    </div>
+    <div id="info-block" class="info-block">
+        <span class="closebtn" onclick="hideInfo()">&times;</span>
+        <p id="crop-info"></p>
+    </div>
+    <script>
+        function showInfo(infoId) {
+            const cropInfo = `
+                NITROGEN:<br>
+                PHOSPHORUS:<br>
+                POTASSIUM:<br>
+                TEMPERATURE:<br>
+                HUMIDITY:<br>
+                PH:<br>
+                RAINFALL:
+            `;
+
+            document.getElementById('crop-info').innerHTML = cropInfo;
+            document.getElementById('info-block').style.display = 'block';
+        }
+
+        function hideInfo() {
+            document.getElementById('info-block').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
