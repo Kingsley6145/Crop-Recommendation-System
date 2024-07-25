@@ -30,13 +30,17 @@ def load_models():
 
 model, standscaler, minmaxscaler = load_models()
 
-# Dictionary to store user credentials
-users = {"Kingsley Ombongi": "Kingsley6"}
+# Dictionary to store user credentials and roles
+users = {"Kingsley Ombongi": {"password": "Kingsley6", "role": "user"}}
+admins = {"Kingsley": {"password": "Kingsley6", "role": "admin"}}
 
 @app.route('/')
 def home():
     if 'username' in session:
-        return redirect(url_for('index'))
+        if session.get('role') == 'admin':
+            return redirect(url_for('admin_dashboard'))
+        else:
+            return redirect(url_for('index'))
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -44,27 +48,52 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username in users and users[username] == password:
+        user = users.get(username)
+        
+        if user and user['password'] == password:
             session['username'] = username
+            session['role'] = 'user'
             return redirect(url_for('index'))
         else:
             flash('Wrong username/password. Try again.', 'error')
     return render_template('login.html')
 
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        admin = admins.get(username)
+        
+        if admin and admin['password'] == password:
+            session['username'] = username
+            session['role'] = 'admin'
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash('Wrong username/password. Try again.', 'error')
+    return render_template('admin_login.html')
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('role', None)
     return redirect(url_for('login'))
+
+@app.route('/admin_logout')
+def admin_logout():
+    session.pop('username', None)
+    session.pop('role', None)
+    return redirect(url_for('admin_login'))
 
 @app.route('/index')
 def index():
-    if 'username' not in session:
+    if 'username' not in session or session.get('role') != 'user':
         return redirect(url_for('login'))
     return render_template("index.html")
 
 @app.route("/predict", methods=['POST'])
 def predict():
-    if 'username' not in session:
+    if 'username' not in session or session.get('role') != 'user':
         return redirect(url_for('login'))
 
     N = float(request.form['Nitrogen'])
@@ -122,15 +151,21 @@ def register():
         if new_username in users:
             flash('Username already exists. Please choose a different username.')
         else:
-            users[new_username] = new_password
+            users[new_username] = {'password': new_password, 'role': 'user'}
             return render_template('register.html', account_created=True)
     return render_template('register.html')
 
 @app.route('/crops')
 def crops():
-    if 'username' not in session:
+    if 'username' not in session or session.get('role') != 'user':
         return redirect(url_for('login'))
     return render_template('crops.html')
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('admin_login'))
+    return render_template('admin_dashboard.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
