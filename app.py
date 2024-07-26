@@ -167,5 +167,29 @@ def admin_dashboard():
         return redirect(url_for('admin_login'))
     return render_template('admin_dashboard.html')
 
+@app.route('/manage_users', methods=['GET', 'POST'])
+def manage_users():
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        if 'add_user' in request.form:
+            new_username = request.form['new_username']
+            new_password = request.form['new_password']
+            if new_username in users:
+                flash('Username already exists. Please choose a different username.', 'danger')
+            else:
+                users[new_username] = {'password': new_password, 'role': 'user'}
+                flash('User added successfully.', 'success')
+        elif 'remove_user' in request.form:
+            username_to_remove = request.form['username_to_remove']
+            if username_to_remove in users:
+                del users[username_to_remove]
+                flash('User removed successfully.', 'success')
+            else:
+                flash('Username not found.', 'danger')
+
+    return render_template('manage_users.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
