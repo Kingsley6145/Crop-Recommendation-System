@@ -6,29 +6,31 @@
     <title>Crop Recommendation System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <style>
+        body {
+            background: linear-gradient(to right, #e91e63, #9c27b0);
+        }
         h1 {
             color: rgb(0, 0, 0);
             text-align: center;
         }
-
         .warning {
             color: red;
             font-weight: bold;
             text-align: center;
         }
         .card {
-            margin-left: 505px;
-            margin-top: 20px;
+            margin: 20px auto;
             display: flex;
             flex-direction: row;
             align-items: center;
-            color: rgb(241, 239, 240);
+            color: white;
         }
         .container {
-            background: #fffbfe;
+            background: rgba(255, 255, 255, 0.9);
             font-weight: bold;
-            padding-bottom: 10px;
+            padding: 20px;
             border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
         .signout-modal .modal-content {
             text-align: center;
@@ -41,12 +43,29 @@
         }
     </style>
 </head>
-<body style="background:#BCBBB8">
+<body>
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Crop Recommendation System</a>
+    <!-- Navigation links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/crops">Crops</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="countiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Counties
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="countiesDropdown">
+            <li><a class="dropdown-item" href="/kiambu">Kiambu County</a></li>
+            <!-- Add more counties here if needed -->
+          </ul>
+        </li>
+      </ul>
+    </div>
     <!-- Sign out button -->
     <button class="btn btn-danger ms-auto" id="signoutButton">Sign out</button>
   </div>
@@ -65,7 +84,7 @@
             </div>
             <div class="col-md-4">
                 <label for="Phosporus">Phosphorus</label>
-                <input type="number" id="Phosporus" name="Phosporus" placeholder="Enter Phosphorus" class="form-control" required step="00">
+                <input type="number" id="Phosporus" name="Phosporus" placeholder="Enter Phosphorus" class="form-control" required step="0">
             </div>
             <div class="col-md-4">
                 <label for="Potassium">Potassium</label>
@@ -84,8 +103,8 @@
             </div>
             <div class="col-md-4">
                 <label for="pH">pH</label>
-                <input type="number" step="0.01" id="pH" name="pH" placeholder="Enter pH value" class="form-control" required step="0">
-            </div>
+                <input type="number" step="0.01" id="pH" name="pH" placeholder="Enter pH value" class="form-control" required min="0" max="14">
+            </div>            
         </div>
 
         <div class="row mt-4">
@@ -106,12 +125,11 @@
         <!-- Display recommended crop -->
         <div class="card bg-dark" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Recommended Crop for Cultivation is:</h5>
+                <h5 class="card-title">Recommended Crops for Cultivation are:</h5>
                 <p class="card-text">{{ result }}</p>
             </div>
         </div>
     {% endif %}
-
 </div>
 
 <!-- Sign out confirmation modal -->
@@ -141,7 +159,6 @@
 
     signoutYes.addEventListener("click", function() {
         // Perform sign out action here, such as redirecting to sign out route
-        // For example:
         window.location.href = "/logout"; // Assuming '/logout' is your sign out route
     });
 </script>
