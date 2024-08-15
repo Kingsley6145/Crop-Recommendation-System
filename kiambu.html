@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #e91e63, #9c27b0);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .crop {
+            width: 45%;
+            margin: 20px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            padding: 10px;
+        }
+
+        .crop:hover {
+            transform: scale(1.05);
+        }
+
+        .crop p {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .info-block {
+            display: none;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -20%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            width: 60%;
+        }
+
+        .info-block .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: #673ab7;
+            border-color: #673ab7;
+            color: white;
+            border-radius: 30px;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #512da8;
+            border-color: #512da8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KIAMBU COUNTY</h1>
+        <div class="grid">
+            <div class="crop" onclick="showInfo('Ruiru')">
+                <p>RUIRU</p>
+            </div>
+            <div class="crop" onclick="showInfo('Juja')">
+                <p>JUJA</p>
+            </div>
+            <div class="crop" onclick="showInfo('Kikuyu')">
+                <p>KIKUYU</p>
+            </div>
+            <div class="crop" onclick="showInfo('Kabete')">
+                <p>KABETE</p>
+            </div>
+            <div class="crop" onclick="showInfo('Kiambaa')">
+                <p>KIAMBAA</p>
+            </div>
+            <div class="crop" onclick="showInfo('Kiambu Town')">
+                <p>KIAMBU TOWN</p>
+            </div>
+            <div class="crop" onclick="showInfo('Lari')">
+                <p>LARI</p>
+            </div>
+            <div class="crop" onclick="showInfo('Limuru')">
+                <p>LIMURU</p>
+            </div>
+            <div class="crop" onclick="showInfo('Thika Town')">
+                <p>THIKA TOWN</p>
+            </div>
+            <div class="crop" onclick="showInfo('Gatundu North')">
+                <p>GATUNDU NORTH</p>
+            </div>
+            <div class="crop" onclick="showInfo('Gatundu South')">
+                <p>GATUNDU SOUTH</p>
+            </div>
+        </div>
+    </div>
+    <div id="info-block" class="info-block">
+        <span class="closebtn" onclick="hideInfo()">&times;</span>
+        <p id="crop-info"></p>
+    </div>
+    <script>
+        const subcountyConditions = {
+            "Ruiru": {
+                "N": "18.34 - 38.34",
+                "P": "70.98 - 90.98",
+                "K": "91.62 - 111.62",
+                "Temperature": "19.1 - 39.1",
+                "Humidity": "72.67 - 92.67",
+                "pH": "4.36 - 5.36",
+                "Rainfall": "255.16 - 275.16"
+            },
+            "Juja": {
+                "N": "34.84 - 54.84",
+                "P": "14.67 - 34.67",
+                "K": "130.02 - 150.02",
+                "Temperature": "13.61 - 33.61",
+                "Humidity": "63.05 - 83.05",
+                "pH": "8.51 - 9.51",
+                "Rainfall": "22.2 - 42.2"
+            },
+            "Kikuyu": {
+                "N": "25.53 - 45.53",
+                "P": "65.22 - 85.22",
+                "K": "22.52 - 42.52",
+                "Temperature": "19.93 - 39.93",
+                "Humidity": "32.75 - 52.75",
+                "pH": "8.74 - 9.74",
+                "Rainfall": "253.46 - 273.46"
+            },
+            "Kabete": {
+                "N": "50.32 - 70.32",
+                "P": "35.12 - 55.12",
+                "K": "131.43 - 151.43",
+                "Temperature": "10.95 - 30.95",
+                "Humidity": "70.19 - 90.19",
+                "pH": "4.61 - 5.61",
+                "Rainfall": "88.32 - 108.32"
+            },
+            "Kiambaa": {
+                "N": "77.92 - 97.92",
+                "P": "72.7 - 92.7",
+                "K": "22.71 - 42.71",
+                "Temperature": "18.77 - 38.77",
+                "Humidity": "47.84 - 67.84",
+                "pH": "3.61 - 4.61",
+                "Rainfall": "101.4 - 121.4"
+            },
+            "Kiambu Town": {
+                "N": "48.32 - 68.32",
+                "P": "59.25 - 79.25",
+                "K": "75.09 - 95.09",
+                "Temperature": "16.01 - 36.01",
+                "Humidity": "37.28 - 57.28",
+                "pH": "3.73 - 4.73",
+                "Rainfall": "175.59 - 195.59"
+            },
+            "Lari": {
+                "N": "56.57 - 76.57",
+                "P": "7.64 - 27.64",
+                "K": "115.34 - 135.34",
+                "Temperature": "13.83 - 33.83",
+                "Humidity": "63.94 - 83.94",
+                "pH": "4.36 - 5.36",
+                "Rainfall": "195.59 - 215.59"
+            },
+            "Limuru": {
+                "N": "82.81 - 102.81",
+                "P": "53.84 - 73.84",
+                "K": "150.68 - 170.68",
+                "Temperature": "22.13 - 42.13",
+                "Humidity": "15.51 - 35.51",
+                "pH": "8.2 - 9.2",
+                "Rainfall": "112.46 - 132.46"
+            },
+            "Thika Town": {
+                "N": "2.09 - 22.09",
+                "P": "63.08 - 83.08",
+                "K": "32.52 - 52.52",
+                "Temperature": "19.11 - 39.11",
+                "Humidity": "73.41 - 93.41",
+                "pH": "5.39 - 6.39",
+                "Rainfall": "184.51 - 204.51"
+            },
+            "Gatundu North": {
+                "N": "51.76 - 71.76",
+                "P": "33.61 - 53.61",
+                "K": "109.01 - 129.01",
+                "Temperature": "22.78 - 42.78",
+                "Humidity": "34.43 - 54.43",
+                "pH": "7.97 - 8.97",
+                "Rainfall": "183.5 - 203.5"
+            },
+            "Gatundu South": {
+                "N": "111.72 - 131.72",
+                "P": "22.53 - 42.53",
+                "K": "6.77 - 26.77",
+                "Temperature": "13.54 - 33.54",
+                "Humidity": "79.7 - 99.7",
+                "pH": "3.69 - 4.69",
+                "Rainfall": "263.54 - 283.54"
+            }
+        };
+
+        function showInfo(subcounty) {
+            const cropInfo = `
+                NITROGEN: ${subcountyConditions[subcounty]["N"]}<br>
+                PHOSPHORUS: ${subcountyConditions[subcounty]["P"]}<br>
+                POTASSIUM: ${subcountyConditions[subcounty]["K"]}<br>
+                TEMPERATURE: ${subcountyConditions[subcounty]["Temperature"]}<br>
+                HUMIDITY: ${subcountyConditions[subcounty]["Humidity"]}<br>
+                pH: ${subcountyConditions[subcounty]["pH"]}<br>
+                RAINFALL: ${subcountyConditions[subcounty]["Rainfall"]}
+            `;
+
+            document.getElementById('crop-info').innerHTML = cropInfo;
+            document.getElementById('info-block').style.display = 'block';
+        }
+
+        function hideInfo() {
+            document.getElementById('info-block').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
